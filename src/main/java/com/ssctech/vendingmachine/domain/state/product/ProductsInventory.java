@@ -1,0 +1,54 @@
+package com.ssctech.vendingmachine.domain.state.product;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.ssctech.vendingmachine.domain.product.Product;
+
+public class ProductsInventory {
+
+  private static ProductsInventory soleInstance = new ProductsInventory();
+
+  //the value of the map is the number of products inside the machine inventory.
+  Map<Product, Integer> inventory = new LinkedHashMap<>();
+
+  private ProductsInventory() {
+  }
+
+  public static ProductsInventory instance() {
+    return soleInstance;
+  }
+
+  public ProductsInventory add(Product product, Integer amount) {
+    Optional<Product> existingProductWithSameNameButDifferentPrice = inventory.keySet().stream()
+        .filter(aProduct -> aProduct.sameNameButDifferentPrice(product))
+        .findFirst();
+    if (existingProductWithSameNameButDifferentPrice.isPresent()) {
+      throw new IllegalArgumentException("A product with the same name, but a different type is already present: "
+          + existingProductWithSameNameButDifferentPrice + ". Choose a different name.");
+    }
+    this.inventory.compute(
+        product, (currentKey, currentValue) -> currentValue == null ? amount : currentValue + amount
+    );
+    return this;
+  }
+
+  public Set<Product> getAvailableProducts() {
+    return inventory.entrySet().stream()
+        .filter(productEntry -> productEntry.getValue() > 0)
+        .map(productEntry -> productEntry.getKey())
+        .collect(Collectors.toSet());
+  }
+
+  public Set<Product> getUnavailableProducts() {
+    return inventory.entrySet().stream()
+        .filter(productEntry -> productEntry.getValue() == 0)
+        .map(productEntry -> productEntry.getKey())
+        .collect(Collectors.toSet());
+  }
+
+}
