@@ -1,5 +1,7 @@
 package com.ssctech.vendingmachine.domain.state.money;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class UserBalance {
 
   private static UserBalance soleInstance = new UserBalance();
 
-  private Money balance = Money.ZERO;
+  private BigDecimal balance = Money.toBigDecimal(0);
 
   private UserBalance() {
   }
@@ -22,51 +24,20 @@ public class UserBalance {
   }
 
   public UserBalance add(Coin coin, Integer amount) {
-    this.balance = balance.add(coin, amount);
+    this.balance = balance.add(coin.coinValue().multiply(Money.toBigDecimal(amount)).setScale(2, RoundingMode.HALF_UP));
+    MoneyInventoryHeld.instance().add(coin, amount);
     return this;
   }
 
   public void resetBalanceToZero() {
-    this.balance = Money.ZERO;
-  }
-
-  public Money withdrawAllMoney() {
-    Money currentInventory = balance;
-    balance = Money.ZERO;
-    return currentInventory;
+    this.balance = Money.toBigDecimal(0);
   }
 
   public void withdraw(double amount) {
-    double newAmount = amount;
-    Money newBalance = balance;
-    Map<Coin, Integer> userBalanceCoins = new TreeMap<>(newBalance.getStoredCoins());
-    List<Coin> balanceCoinTypes = userBalanceCoins.keySet().stream().toList();
-    Collections.reverse(balanceCoinTypes);
-    boolean lastIterationExtractedCoin = false;
-    while (newAmount > 0) {
-      for (Coin aBallanceCoinType : balanceCoinTypes) {
-        while (true) {
-          if (aBallanceCoinType.coinValue().doubleValue() < newAmount) {
-            newAmount = newAmount - aBallanceCoinType.coinValue().doubleValue();
-            newBalance = newBalance.subtract(aBallanceCoinType);
-            userBalanceCoins = new TreeMap<>(newBalance.getStoredCoins());
-            balanceCoinTypes = userBalanceCoins.keySet().stream().toList();
-            Collections.reverse(balanceCoinTypes);
-            lastIterationExtractedCoin = true;
-            continue;
-          }
-          break;
-        }
-        if (!lastIterationExtractedCoin) {
-          throw new IllegalArgumentException(
-              "Cannot extract amount " + amount + " from coins:" + balance.getStoredCoins());
-        }
-      }
-    }
-    balance = newBalance;
+    this.balance = this.balance.subtract(Money.toBigDecimal(amount));
   }
 
-  public Money getBalanceCoins() {
+  public BigDecimal getBalance() {
     return balance;
   }
 }

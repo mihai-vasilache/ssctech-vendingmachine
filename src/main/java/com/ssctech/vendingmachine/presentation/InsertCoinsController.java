@@ -50,7 +50,7 @@ public class InsertCoinsController extends Controller {
   public void displayMenu(Display display) {
     display.newEmptyScreen();
     display.print("Your current balance is: " +
-        UserBalance.instance().getBalanceCoins().amount().toPlainString() + " " +
+        UserBalance.instance().getBalance().toPlainString() + " " +
         MachineConfiguration.getSupportedCoinTypes().getCurrency().getCurrencyCode()
     );
     display.print("Coin types:");

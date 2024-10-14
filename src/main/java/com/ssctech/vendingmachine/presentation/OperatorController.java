@@ -24,15 +24,12 @@ public class OperatorController extends Controller {
     try {
       int menuChoice = Integer.parseInt(input);
       if (menuChoice == 1) {
-        if (UserBalance.instance().getBalanceCoins().amount().doubleValue() > 0) {
+        if (UserBalance.instance().getBalance().doubleValue() > 0) {
           display.print("User balance is :" +
-              UserBalance.instance().getBalanceCoins().amount().toPlainString() + " " +
-              MachineConfiguration.getSupportedCoinTypes().getCurrency().getCurrencyCode() + ". " +
-              "It will be moved to Machine Inventory."
+              UserBalance.instance().getBalance().toPlainString() + " " +
+              MachineConfiguration.getSupportedCoinTypes().getCurrency().getCurrencyCode() + ". "
           );
-          MoneyInventoryHeld.instance().add(UserBalance.instance().getBalanceCoins());
           UserBalance.instance().resetBalanceToZero();
-
         }
         display.print("Withdrawing machine inventory: " +
             MoneyInventoryHeld.instance().getInventory().amount().toPlainString() + " " +

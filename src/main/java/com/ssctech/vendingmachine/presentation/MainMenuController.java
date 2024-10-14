@@ -36,7 +36,7 @@ public class MainMenuController extends Controller {
       }
       Product chosenProduct = availableProducts.get(productChoice - 1);
 
-      if (UserBalance.instance().getBalanceCoins().amount().doubleValue() < chosenProduct.getPrice().doubleValue()) {
+      if (UserBalance.instance().getBalance().doubleValue() < chosenProduct.getPrice().doubleValue()) {
         display.print("[[[ Not enough money in your balance for " + chosenProduct.getName() + " ]]]");
         displayMenu(display);
         return ControllerResult.readUserInput(this);
@@ -72,7 +72,7 @@ public class MainMenuController extends Controller {
       display.print("\t" + unavailableProduct.getName() + " " + " IS OUT OF STOCK");
     }
     display.print("Your current balance is: " +
-        UserBalance.instance().getBalanceCoins().amount().toPlainString() + " " +
+        UserBalance.instance().getBalance().toPlainString() + " " +
         MachineConfiguration.getSupportedCoinTypes().getCurrency().getCurrencyCode()
     );
     display.print("(Enter \"op\" for operator menu)");
