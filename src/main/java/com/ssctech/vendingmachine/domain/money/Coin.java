@@ -5,7 +5,7 @@ import java.util.Currency;
 import java.util.Objects;
 
 //generic name for a coin or banknote
-public class Coin {
+public class Coin implements Comparable<Coin> {
 
   public enum Currencies {
     RON(Currency.getInstance("RON")),
@@ -57,6 +57,11 @@ public class Coin {
   @Override
   public int hashCode() {
     return Objects.hash(currency, coinValue);
+  }
+
+  @Override
+  public int compareTo(Coin otherCoin) {
+    return this.coinValue.compareTo(otherCoin.coinValue);
   }
 
   @Override

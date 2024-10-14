@@ -1,7 +1,10 @@
 package com.ssctech.vendingmachine.domain.state.money;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.ssctech.vendingmachine.domain.money.Coin;
@@ -23,6 +26,12 @@ public class AllowedMachineCoinTypes {
       throw new IllegalStateException("Allowed coin types are not configured yet");
     }
     return coinTypes.stream().findFirst().get().currency();
+  }
+
+  public List<Coin> getCoinTypes() {
+    List listOfCoins = new ArrayList(coinTypes);
+    Collections.sort(listOfCoins);
+    return listOfCoins;
   }
 
   public static Builder builder() {

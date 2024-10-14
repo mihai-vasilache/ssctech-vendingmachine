@@ -1,6 +1,6 @@
 package com.ssctech.vendingmachine.presentation;
 
-import java.util.Set;
+import java.util.List;
 
 import com.ssctech.vendingmachine.domain.product.Product;
 import com.ssctech.vendingmachine.domain.state.MachineConfiguration;
@@ -13,6 +13,7 @@ import com.ssctech.vendingmachine.presentation.supertype.Display;
 public class MainMenuController extends Controller {
 
   private static final String OPERATOR_COMMAND = "op";
+  private static final String INSERT_COINS_COMMAND = "c";
 
   @Override
   public ControllerResult run(String input, Display display) {
@@ -24,13 +25,39 @@ public class MainMenuController extends Controller {
     if (input.equals(OPERATOR_COMMAND)) {
       return ControllerResult.redirect(new OperatorController());
     }
+    if (input.equals(INSERT_COINS_COMMAND)) {
+      return ControllerResult.redirect(new InsertCoinsController());
+    }
+    try {
+      int productChoice = Integer.parseInt(input);
+      List<Product> availableProducts = ProductsInventory.instance().getAvailableProducts();
+      if (productChoice < 1 || productChoice > availableProducts.size()) {
+        return displayInvalidCommand(input, display);
+      }
+      Product chosenProduct = availableProducts.get(productChoice - 1);
+
+      if (UserBalance.instance().getBalanceCoins().amount().doubleValue() < chosenProduct.getPrice().doubleValue()) {
+        display.print("[[[ Not enough money in your balance for " + chosenProduct.getName() + " ]]]");
+        displayMenu(display);
+        return ControllerResult.readUserInput(this);
+      }
+
+      ProductsInventory.instance().subtractOneProductItem(chosenProduct);
+      UserBalance.instance().withdraw(chosenProduct.getPrice().doubleValue());
+
+      display.print("[[[ Pick up the chosen product: " + chosenProduct.getName() + " ]]]");
+      displayMenu(display);
+      return ControllerResult.readUserInput(this);
+    } catch (NumberFormatException e) {
+    }
+
     return displayInvalidCommand(input, display);
   }
 
   public void displayMenu(Display display) {
     display.newEmptyScreen();
     display.print("Current products:");
-    Set<Product> availableProducts = ProductsInventory.instance().getAvailableProducts();
+    List<Product> availableProducts = ProductsInventory.instance().getAvailableProducts();
     int productNumber = 1;
     for (Product availableProduct : availableProducts) {
       display.print("\t" + productNumber + ". " +
@@ -40,7 +67,7 @@ public class MainMenuController extends Controller {
       );
       productNumber++;
     }
-    Set<Product> unavailableProducts = ProductsInventory.instance().getUnavailableProducts();
+    List<Product> unavailableProducts = ProductsInventory.instance().getUnavailableProducts();
     for (Product unavailableProduct : unavailableProducts) {
       display.print("\t" + unavailableProduct.getName() + " " + " IS OUT OF STOCK");
     }

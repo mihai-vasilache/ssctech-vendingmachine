@@ -33,6 +33,15 @@ public class Money {
     return builder().add(this.amount).add(money.getStoredCoins()).build();
   }
 
+  public Money subtract(Coin coin) {
+    if (!this.amount.containsKey(coin)) {
+      throw new IllegalArgumentException("Coin " + coin.coinValue().toPlainString() + " does not exist in this money.");
+    }
+    Map<Coin, Integer> storedCoins = getStoredCoins();
+    storedCoins.put(coin, storedCoins.get(coin) - 1);
+    return builder().add(storedCoins).build();
+  }
+
   public Map<Coin, Integer> getStoredCoins() {
     return Collections.unmodifiableMap(amount);
   }
@@ -40,7 +49,9 @@ public class Money {
   public BigDecimal amount() {
     BigDecimal amountOfMoney = Money.toBigDecimal(0);
     for (Entry<Coin, Integer> aCoinAmount : amount.entrySet()) {
-      amountOfMoney = amountOfMoney.add(aCoinAmount.getKey().coinValue().multiply(Money.toBigDecimal(aCoinAmount.getValue()))).setScale(2, RoundingMode.HALF_UP);
+      amountOfMoney = amountOfMoney.add(
+              aCoinAmount.getKey().coinValue().multiply(Money.toBigDecimal(aCoinAmount.getValue())))
+          .setScale(2, RoundingMode.HALF_UP);
     }
     return amountOfMoney;
   }

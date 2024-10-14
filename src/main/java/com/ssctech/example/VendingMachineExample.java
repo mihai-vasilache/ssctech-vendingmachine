@@ -16,7 +16,7 @@ public class VendingMachineExample {
     );
 
     ProductsInventory.instance().setClientSpecificMachineRefillOperation(
-      ExampleProductsMachineSetup.getMachineRefillOperation()
+        ExampleProductsMachineSetup.getMachineRefillOperation()
     );
 
     FrontController frontController = new FrontController();

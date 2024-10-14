@@ -5,7 +5,6 @@ import com.ssctech.vendingmachine.utils.TestsDisplay;
 import com.ssctech.vendingmachine.utils.TestsDisplay.TestScreen.ScreenLineTextsBuilder;
 import com.ssctech.vendingmachine.utils.TestsInputReader;
 import com.ssctech.vendingmachine.utils.VendingMachineTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
@@ -30,11 +29,13 @@ public class OperatorResupplyTest extends VendingMachineTest {
 
     testsDisplay.getScreen(3).containsLines(
         new ScreenLineTextsBuilder()
+            .line("Coke", "20")
+            .line("Pepsi", "20")
+            .line("Water", "20")
             .line("Machine balance is", "92.50 EUR")
             .getText()
     );
 
-    //Assertions.assertTrue();
 
   }
 

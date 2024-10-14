@@ -32,6 +32,7 @@ public class OperatorController extends Controller {
           );
           MoneyInventoryHeld.instance().add(UserBalance.instance().getBalanceCoins());
           UserBalance.instance().resetBalanceToZero();
+
         }
         display.print("Withdrawing machine inventory: " +
             MoneyInventoryHeld.instance().getInventory().amount().toPlainString() + " " +

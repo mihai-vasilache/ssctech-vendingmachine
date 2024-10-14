@@ -2,9 +2,9 @@ package com.ssctech.vendingmachine.domain.state.product;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -40,18 +40,25 @@ public class ProductsInventory {
     return this;
   }
 
-  public Set<Product> getAvailableProducts() {
+  public void subtractOneProductItem(Product productToSubtract) {
+    if (inventory.get(productToSubtract) < 0) {
+      throw new IllegalArgumentException("No more items to substract from " + productToSubtract.getName());
+    }
+    inventory.put(productToSubtract, inventory.size() - 1);
+  }
+
+  public List<Product> getAvailableProducts() {
     return inventory.entrySet().stream()
         .filter(productEntry -> productEntry.getValue() > 0)
         .map(productEntry -> productEntry.getKey())
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
-  public Set<Product> getUnavailableProducts() {
+  public List<Product> getUnavailableProducts() {
     return inventory.entrySet().stream()
         .filter(productEntry -> productEntry.getValue() == 0)
         .map(productEntry -> productEntry.getKey())
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
   public Map<Product, Integer> getInventory() {
