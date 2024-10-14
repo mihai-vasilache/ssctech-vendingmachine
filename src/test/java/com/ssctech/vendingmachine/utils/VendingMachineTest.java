@@ -1,33 +1,33 @@
 package com.ssctech.vendingmachine.utils;
 
-import com.ssctech.example.ExampleCoinTypes;
-import com.ssctech.example.ExampleProducts;
-import com.ssctech.vendingmachine.domain.state.product.ProductsInventory;
+import com.ssctech.example.ExampleCoinMachineSetup;
+import com.ssctech.example.ExampleProductsMachineSetup;
 import com.ssctech.vendingmachine.domain.state.money.MoneyInventoryHeld;
+import com.ssctech.vendingmachine.domain.state.product.ProductsInventory;
 
 public class VendingMachineTest {
 
   public void initializeMachine() {
-    ExampleCoinTypes.setupMachineWithAcceptedCoinTypes();
+    ExampleCoinMachineSetup.machineCoinsSetup();
     fillMachineWithCoins();
     fillMachineWithProducts();
   }
 
   public void fillMachineWithCoins() {
     MoneyInventoryHeld.instance()
-        .add(ExampleCoinTypes.FIVE_CENTS, 50)
-        .add(ExampleCoinTypes.TEN_CENTS, 50)
-        .add(ExampleCoinTypes.TWENTY_CENTS, 30)
-        .add(ExampleCoinTypes.FIFTY_CENTS, 30)
-        .add(ExampleCoinTypes.ONE_EURO, 20)
-        .add(ExampleCoinTypes.TWO_EURO, 10);
+        .add(ExampleCoinMachineSetup.FIVE_CENTS, 50)
+        .add(ExampleCoinMachineSetup.TEN_CENTS, 50)
+        .add(ExampleCoinMachineSetup.TWENTY_CENTS, 30)
+        .add(ExampleCoinMachineSetup.FIFTY_CENTS, 30)
+        .add(ExampleCoinMachineSetup.ONE_EURO, 20)
+        .add(ExampleCoinMachineSetup.TWO_EURO, 10);
   }
 
   public void fillMachineWithProducts() {
     ProductsInventory.instance()
-        .add(ExampleProducts.COKE, 30)
-        .add(ExampleProducts.PEPSI, 50)
-        .add(ExampleProducts.WATER, 50);
+        .add(ExampleProductsMachineSetup.COKE, 30)
+        .add(ExampleProductsMachineSetup.PEPSI, 50)
+        .add(ExampleProductsMachineSetup.WATER, 50);
   }
 
 }

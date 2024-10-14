@@ -1,10 +1,11 @@
 package com.ssctech.vendingmachine.domain.state.product;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.ssctech.vendingmachine.domain.product.Product;
@@ -15,6 +16,8 @@ public class ProductsInventory {
 
   //the value of the map is the number of products inside the machine inventory.
   Map<Product, Integer> inventory = new LinkedHashMap<>();
+
+  private Consumer<Map<Product, Integer>> clientSpecificMachineRefill;
 
   private ProductsInventory() {
   }
@@ -51,4 +54,18 @@ public class ProductsInventory {
         .collect(Collectors.toSet());
   }
 
+  public Map<Product, Integer> getInventory() {
+    return Collections.unmodifiableMap(inventory);
+  }
+
+  public void setClientSpecificMachineRefillOperation(Consumer<Map<Product, Integer>> clientSpecificMachineRefill) {
+    this.clientSpecificMachineRefill = clientSpecificMachineRefill;
+  }
+
+  public void operatorRefillWithProducts() {
+    if (clientSpecificMachineRefill == null) {
+      throw new RuntimeException("Machine is not properly set. Client specific refill operation is not defined.");
+    }
+    clientSpecificMachineRefill.accept(inventory);
+  }
 }

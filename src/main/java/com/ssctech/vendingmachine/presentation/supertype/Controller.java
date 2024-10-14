@@ -1,7 +1,13 @@
 package com.ssctech.vendingmachine.presentation.supertype;
 
-public interface Controller {
+public abstract class Controller {
 
-  Controller run(String input, Display display);
+  public abstract ControllerResult run(String input, Display display);
+
+  protected ControllerResult displayInvalidCommand(String input, Display display) {
+    display.print("Illegal command: \"" + input + "\". Please enter a valid command.");
+    return ControllerResult.readUserInput(this);
+  }
+
 
 }

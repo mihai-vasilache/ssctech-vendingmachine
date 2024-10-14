@@ -1,6 +1,7 @@
 package com.ssctech.vendingmachine.domain.money;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,15 +38,15 @@ public class Money {
   }
 
   public BigDecimal amount() {
-    BigDecimal amountOfMoney = BigDecimal.ZERO;
+    BigDecimal amountOfMoney = Money.toBigDecimal(0);
     for (Entry<Coin, Integer> aCoinAmount : amount.entrySet()) {
-      amountOfMoney.add(aCoinAmount.getKey().coinValue().multiply(Money.toBigDecimal(aCoinAmount.getValue())));
+      amountOfMoney = amountOfMoney.add(aCoinAmount.getKey().coinValue().multiply(Money.toBigDecimal(aCoinAmount.getValue()))).setScale(2, RoundingMode.HALF_UP);
     }
     return amountOfMoney;
   }
 
   public static BigDecimal toBigDecimal(double input) {
-    return BigDecimal.valueOf(input).setScale(2, BigDecimal.ROUND_HALF_UP);
+    return BigDecimal.valueOf(input).setScale(2, RoundingMode.HALF_UP);
   }
 
   @Override
