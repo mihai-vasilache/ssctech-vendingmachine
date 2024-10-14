@@ -34,4 +34,8 @@ public class FrontController {
   public void setInputReader(InputReader inputReader) {
     this.inputReader = inputReader;
   }
+
+  public void setDisplay(Display display) {
+    this.display = display;
+  }
 }

@@ -7,27 +7,25 @@ import com.ssctech.vendingmachine.domain.state.product.ProductsInventory;
 
 public class VendingMachineTest {
 
-  public void initializeMachine() {
+  protected void initializeMachine() {
     ExampleCoinMachineSetup.machineCoinsSetup();
-    fillMachineWithCoins();
-    fillMachineWithProducts();
+    ExampleProductsMachineSetup.machineProductsSetup();
+    setRefillOperations();
   }
 
-  public void fillMachineWithCoins() {
-    MoneyInventoryHeld.instance()
-        .add(ExampleCoinMachineSetup.FIVE_CENTS, 50)
-        .add(ExampleCoinMachineSetup.TEN_CENTS, 50)
-        .add(ExampleCoinMachineSetup.TWENTY_CENTS, 30)
-        .add(ExampleCoinMachineSetup.FIFTY_CENTS, 30)
-        .add(ExampleCoinMachineSetup.ONE_EURO, 20)
-        .add(ExampleCoinMachineSetup.TWO_EURO, 10);
+  protected void fillMachine() {
+    MoneyInventoryHeld.instance().operatorRefillWithCoins();
+    ProductsInventory.instance().operatorRefillWithProducts();
   }
 
-  public void fillMachineWithProducts() {
-    ProductsInventory.instance()
-        .add(ExampleProductsMachineSetup.COKE, 30)
-        .add(ExampleProductsMachineSetup.PEPSI, 50)
-        .add(ExampleProductsMachineSetup.WATER, 50);
+  protected void setRefillOperations() {
+    MoneyInventoryHeld.instance().setClientSpecificMachineRefillOperation(
+        () -> ExampleCoinMachineSetup.getMachineFullCapacityInMoney()
+    );
+
+    ProductsInventory.instance().setClientSpecificMachineRefillOperation(
+        ExampleProductsMachineSetup.getMachineRefillOperation()
+    );
   }
 
 }

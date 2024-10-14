@@ -3,6 +3,7 @@ package com.ssctech.example;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.ssctech.vendingmachine.domain.product.Product;
 import com.ssctech.vendingmachine.domain.state.product.ProductsInventory;
@@ -29,6 +30,16 @@ public class ExampleProductsMachineSetup {
 
   public static Map<Product, Integer> getMachineFullCapacityInProducts() {
     return Collections.unmodifiableMap(fullProductsMachineCapacity);
+  }
+
+  public static Consumer<Map<Product, Integer>> getMachineRefillOperation() {
+    return (currentInventory) -> ExampleProductsMachineSetup.getMachineFullCapacityInProducts()
+        .forEach(
+            (aProduct, aFullProductCapacity) ->
+                ProductsInventory.instance().add(
+                    aProduct, aFullProductCapacity - currentInventory.get(aProduct)
+                )
+        );
   }
 
 }

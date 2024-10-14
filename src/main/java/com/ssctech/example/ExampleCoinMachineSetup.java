@@ -2,6 +2,7 @@ package com.ssctech.example;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.ssctech.vendingmachine.domain.money.Coin;
 import com.ssctech.vendingmachine.domain.money.Coin.Currencies;
@@ -47,5 +48,4 @@ public class ExampleCoinMachineSetup {
     );
     return moneyBuilder.build();
   }
-
 }

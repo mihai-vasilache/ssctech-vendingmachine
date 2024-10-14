@@ -16,13 +16,7 @@ public class VendingMachineExample {
     );
 
     ProductsInventory.instance().setClientSpecificMachineRefillOperation(
-        (currentInventory) -> ExampleProductsMachineSetup.getMachineFullCapacityInProducts()
-            .forEach(
-                (aProduct, aFullProductCapacity) ->
-                    ProductsInventory.instance().add(
-                        aProduct, aFullProductCapacity - currentInventory.get(aProduct)
-                    )
-            )
+      ExampleProductsMachineSetup.getMachineRefillOperation()
     );
 
     FrontController frontController = new FrontController();
